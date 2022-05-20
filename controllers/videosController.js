@@ -1,5 +1,6 @@
 import db from "../db.js"
 import { ObjectId } from "mongodb"
+import Joi from "joi"
 
 export async function getVideos(req,res){
     const category = req.query.category
@@ -39,6 +40,22 @@ export async function getSpecificVideo(req, res){
         else{
             res.status(404).send("Video not found")
         }
+    }catch(e){
+        res.status(500).send("Connection with database has failed")
+    }
+}
+
+export async function insertComment(req, res){
+    const {name, comment} = req.body
+    const {id} = req.params
+    const commentSchema = Joi.object({
+        name: Joi.string().required(),
+        comment: Joi.string().required()
+    })
+    const validation = commentSchema.validate(req.body)
+    try{
+        const insertComment = await db.collection("videos").updateOne({_id: new ObjectId(id)}, {$push: {comments:{name: name, comment: comment} }})
+        res.status(201).send("comment created")
     }catch(e){
         res.status(500).send("Connection with database has failed")
     }
