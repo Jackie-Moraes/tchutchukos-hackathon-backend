@@ -1,4 +1,5 @@
 import db from "../db.js"
+import { ObjectId } from "mongodb"
 
 export async function getVideos(req,res){
     const category = req.query.category
@@ -27,3 +28,18 @@ export async function getVideos(req,res){
         res.status(500).send("Connection with database has failed")
     }
     }
+
+export async function getSpecificVideo(req, res){
+    const {id} = req.params
+    try{
+        const specificVideo = await db.collection("videos").findOne({_id: new ObjectId(id)})
+        if(specificVideo){
+            res.status(200).send(specificVideo)
+        }
+        else{
+            res.status(404).send("Video not found")
+        }
+    }catch(e){
+        res.status(500).send("Connection with database has failed")
+    }
+}
