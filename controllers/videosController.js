@@ -61,3 +61,25 @@ export async function insertComment(req, res){
         res.status(500).send("Connection with database has failed")
     }
 }
+
+export async function likeVideo(req, res){
+    const {id} = req.params
+    try{
+        await db.collection("videos").updateOne({_id: new ObjectId(id)}, {$inc: {likes: + 1}})
+        res.status(200).send("Liked")
+    }catch(e){
+        console.log(e)
+        res.status(500).send("Connection with database has failed")
+    }
+}
+
+export async function dislikeVideo(req, res){
+    const {id} = req.params
+    try{
+        await db.collection("videos").updateOne({_id: new ObjectId(id)}, {$inc: {dislikes: +1}})
+        res.status(200).send("Disliked")
+    }catch(e){
+        console.log(e)
+        res.status(500).send("Connection with database has failed")
+    }
+}
