@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import videosRouter from "./routes/videosRouter.js"
+import categoryRouter from "./routes/categoryRouter.js"
 
 dotenv.config()
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 })
 
 app.use(videosRouter)
+app.use(categoryRouter)
 
 app.listen(process.env.PORT || 5000, () =>
     console.log(`Server running on port ${process.env.PORT || 5000}`)
